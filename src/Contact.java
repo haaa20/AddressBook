@@ -6,6 +6,8 @@ public class Contact {
     private SimpleStringProperty address;
     private AddressBook.Countries country;
 
+    // This is another change
+
     public Contact(
             SimpleStringProperty name,
             SimpleStringProperty number,

@@ -21,6 +21,9 @@ public class AddressBook extends Application {
         DE,
         CN
     }
+
+    // This is a change
+
     ContactsModel contactsModel = new ContactsModel();
 
     public static void main(String[] args) {
