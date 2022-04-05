@@ -12,9 +12,47 @@ import javax.swing.event.ChangeListener;
 public class ContactsModel {
     // Private internal class, encapsulating the table
     private class ContactTable {
-
+        private TableView table;
+        private TableListener changeListener;
 
         public ContactTable() {
+            table = new TableView();
+            changeListener = new TableListener();
+
+            // Adding table columns
+            TableColumn nameColumn = new TableColumn("Name");
+            TableColumn numberColumn = new TableColumn("Number");
+            TableColumn addressColumn = new TableColumn("Address");
+            TableColumn countryColumn = new TableColumn("Country");
+            table.getColumns().addAll(
+                    nameColumn,
+                    numberColumn,
+                    addressColumn,
+                    countryColumn
+            );
+
+            nameColumn.setCellValueFactory(
+                    // The value Factories
+                    // Will look in a Contact object for a SimpleStringProperty called "name"
+                    new PropertyValueFactory<Contact, SimpleStringProperty>("name")
+            );
+            numberColumn.setCellValueFactory(
+                    new PropertyValueFactory<Contact, SimpleStringProperty>("number")
+            );
+            addressColumn.setCellValueFactory(
+                    new PropertyValueFactory<Contact, SimpleStringProperty>("address")
+            );
+            countryColumn.setCellValueFactory(
+                    new PropertyValueFactory<Contact, AddressBook.Countries>("country")
+            );
+        }
+
+        public TableView getTable() {
+            return table;
+        }
+
+        public void setItems(ObservableList<Contact> items) {
+            table.setItems(items);
         }
     }
 
@@ -28,45 +66,11 @@ public class ContactsModel {
                 new Contact("Rob", "123", "Manchester", AddressBook.Countries.UK),
                 new Contact("Sean", "321", "Manchester", AddressBook.Countries.UK)
         );
+        contactTable.setItems(data);
     }
 
-    public TableView setupContactTable() {
-        TableView table = new TableView();
-        TableListener changeListener = new TableListener();
-
-        // Adding table columns
-        TableColumn nameColumn = new TableColumn("Name");
-        TableColumn numberColumn = new TableColumn("Number");
-        TableColumn addressColumn = new TableColumn("Address");
-        TableColumn countryColumn = new TableColumn("Country");
-        table.getColumns().addAll(
-                nameColumn,
-                numberColumn,
-                addressColumn,
-                countryColumn
-        );
-
-        nameColumn.setCellValueFactory(
-                // The value Factories
-                // Will look in a Contact object for a SimpleStringProperty called "name"
-                new PropertyValueFactory<Contact, SimpleStringProperty>("name")
-        );
-        numberColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, SimpleStringProperty>("number")
-        );
-        addressColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, SimpleStringProperty>("address")
-        );
-        countryColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, AddressBook.Countries>("country")
-        );
-
-        // ADDING THE LISTENER
-        // Literally "on the table" you dumb fuck
-
-        table.setItems(getData());
-        return table;
-
+    public TableView getContactTable() {
+        return contactTable.getTable();
     }
 
 

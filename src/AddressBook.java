@@ -1,6 +1,4 @@
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,7 +8,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -145,7 +142,7 @@ public class AddressBook extends Application {
 
     private Tab setupListTab() {
         Tab list = new Tab("List");
-        TableView table = contactsModel.setupContactTable();
+        TableView table = contactsModel.getContactTable();
 
         list.setContent(table);
 
@@ -177,7 +174,7 @@ public class AddressBook extends Application {
                 searchButton
         );
 
-        vbox.getChildren().addAll(tilePane, contactsModel.setupContactTable());
+        vbox.getChildren().addAll(tilePane, contactsModel.getContactTable());
         search.setContent(vbox);
         return search;
     }
