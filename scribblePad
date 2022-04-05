@@ -1,0 +1,5 @@
+The SelectionModel interface is the part of table responsible for keeping track of whichever
+row is currently selected
+You can use ".getSelectedItem()" to return the selected row AS AN OBJECT
+
+Bruh you need to do some serious refactoring...
