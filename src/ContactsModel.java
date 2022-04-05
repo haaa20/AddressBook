@@ -2,20 +2,73 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class ContactsModel {
+    // Private internal class, encapsulating the table
+    private class ContactTable {
+
+
+        public ContactTable() {
+        }
+    }
+
     private ObservableList<Contact> data;
+    private ContactTable contactTable;
 
     public ContactsModel() {
+        contactTable = new ContactTable();
         // EXAMPLE DATA
         data = FXCollections.observableArrayList(
                 new Contact("Rob", "123", "Manchester", AddressBook.Countries.UK),
                 new Contact("Sean", "321", "Manchester", AddressBook.Countries.UK)
         );
     }
+
+    public TableView setupContactTable() {
+        TableView table = new TableView();
+        TableListener changeListener = new TableListener();
+
+        // Adding table columns
+        TableColumn nameColumn = new TableColumn("Name");
+        TableColumn numberColumn = new TableColumn("Number");
+        TableColumn addressColumn = new TableColumn("Address");
+        TableColumn countryColumn = new TableColumn("Country");
+        table.getColumns().addAll(
+                nameColumn,
+                numberColumn,
+                addressColumn,
+                countryColumn
+        );
+
+        nameColumn.setCellValueFactory(
+                // The value Factories
+                // Will look in a Contact object for a SimpleStringProperty called "name"
+                new PropertyValueFactory<Contact, SimpleStringProperty>("name")
+        );
+        numberColumn.setCellValueFactory(
+                new PropertyValueFactory<Contact, SimpleStringProperty>("number")
+        );
+        addressColumn.setCellValueFactory(
+                new PropertyValueFactory<Contact, SimpleStringProperty>("address")
+        );
+        countryColumn.setCellValueFactory(
+                new PropertyValueFactory<Contact, AddressBook.Countries>("country")
+        );
+
+        // ADDING THE LISTENER
+        // Literally "on the table" you dumb fuck
+
+        table.setItems(getData());
+        return table;
+
+    }
+
 
     /**
      * Adds a contact

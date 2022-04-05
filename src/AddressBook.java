@@ -145,55 +145,13 @@ public class AddressBook extends Application {
 
     private Tab setupListTab() {
         Tab list = new Tab("List");
-        TableView table = setupContactTable();
+        TableView table = contactsModel.setupContactTable();
 
         list.setContent(table);
 
         return list;
     }
 
-    private TableView setupContactTable() {
-        TableView table = new TableView();
-        TableListener changeListener = new TableListener();
-        final ObservableList<Contact> tableData;
-
-        // Adding table columns
-        TableColumn nameColumn = new TableColumn("Name");
-        TableColumn numberColumn = new TableColumn("Number");
-        TableColumn addressColumn = new TableColumn("Address");
-        TableColumn countryColumn = new TableColumn("Country");
-        table.getColumns().addAll(
-                nameColumn,
-                numberColumn,
-                addressColumn,
-                countryColumn
-        );
-
-        // Adding data entries
-        tableData = contactsModel.getData();
-
-        nameColumn.setCellValueFactory(
-                // The value Factories
-                // Will look in a Contact object for a SimpleStringProperty called "name"
-                new PropertyValueFactory<Contact, SimpleStringProperty>("name")
-        );
-        numberColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, SimpleStringProperty>("number")
-        );
-        addressColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, SimpleStringProperty>("address")
-        );
-        countryColumn.setCellValueFactory(
-                new PropertyValueFactory<Contact, Countries>("country")
-        );
-
-        // ADDING THE LISTENER
-        // Literally "on the table" you dumb fuck
-
-        table.setItems(tableData);
-        return table;
-
-    }
 
     private Tab setupSearchTab() {
         Tab search = new Tab("Search");
@@ -219,7 +177,7 @@ public class AddressBook extends Application {
                 searchButton
         );
 
-        vbox.getChildren().addAll(tilePane, setupContactTable());
+        vbox.getChildren().addAll(tilePane, contactsModel.setupContactTable());
         search.setContent(vbox);
         return search;
     }
