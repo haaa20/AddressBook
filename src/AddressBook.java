@@ -19,8 +19,7 @@ public class AddressBook extends Application {
         CN
     }
 
-    // This is a change
-
+    // The contact model
     ContactsModel contactsModel = new ContactsModel();
 
     public static void main(String[] args) {
@@ -142,10 +141,12 @@ public class AddressBook extends Application {
 
     private Tab setupListTab() {
         Tab list = new Tab("List");
-        TableView table = contactsModel.getContactTable();
+        VBox vBox = new VBox();
+        Button editButton = new Button("Edit");
+        editButton.setAlignment(Pos.CENTER);
 
-        list.setContent(table);
-
+        vBox.getChildren().addAll(contactsModel.table(), editButton);
+        list.setContent(vBox);
         return list;
     }
 
@@ -153,7 +154,7 @@ public class AddressBook extends Application {
     private Tab setupSearchTab() {
         Tab search = new Tab("Search");
         TilePane tilePane = new TilePane(10, 4);
-        VBox vbox = new VBox();
+        VBox vBox = new VBox();
 
         // Nodes to go in the TilePane
         Label nameLabel = new Label("Name:");
@@ -174,8 +175,8 @@ public class AddressBook extends Application {
                 searchButton
         );
 
-        vbox.getChildren().addAll(tilePane, contactsModel.getContactTable());
-        search.setContent(vbox);
+        vBox.getChildren().addAll(tilePane, contactsModel.table());
+        search.setContent(vBox);
         return search;
     }
 

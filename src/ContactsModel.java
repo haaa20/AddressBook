@@ -1,13 +1,9 @@
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class ContactsModel {
     // Private internal class, encapsulating the table
@@ -15,7 +11,7 @@ public class ContactsModel {
         private TableView table;
         private TableListener changeListener;
 
-        public ContactTable() {
+        public ContactTable(ObservableList<Contact> items) {
             table = new TableView();
             changeListener = new TableListener();
 
@@ -31,8 +27,8 @@ public class ContactsModel {
                     countryColumn
             );
 
+            // The value Factories
             nameColumn.setCellValueFactory(
-                    // The value Factories
                     // Will look in a Contact object for a SimpleStringProperty called "name"
                     new PropertyValueFactory<Contact, SimpleStringProperty>("name")
             );
@@ -45,6 +41,9 @@ public class ContactsModel {
             countryColumn.setCellValueFactory(
                     new PropertyValueFactory<Contact, AddressBook.Countries>("country")
             );
+
+            // Adding items
+            setItems(items);
         }
 
         public TableView getTable() {
@@ -57,20 +56,23 @@ public class ContactsModel {
     }
 
     private ObservableList<Contact> data;
-    private ContactTable contactTable;
 
     public ContactsModel() {
-        contactTable = new ContactTable();
         // EXAMPLE DATA
         data = FXCollections.observableArrayList(
                 new Contact("Rob", "123", "Manchester", AddressBook.Countries.UK),
                 new Contact("Sean", "321", "Manchester", AddressBook.Countries.UK)
         );
-        contactTable.setItems(data);
     }
 
-    public TableView getContactTable() {
-        return contactTable.getTable();
+    /**
+     * Instances a table based on the ContactModel's data
+     *
+     * @return The table
+     */
+    public TableView table() {
+        // We need to instance a new one every time, otherwise we could only have ONE table
+        return new ContactTable(data).getTable();
     }
 
 
