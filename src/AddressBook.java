@@ -20,12 +20,16 @@ public class AddressBook extends Application {
     }
 
     // The contact model
-    ContactsModel contactsModel = new ContactsModel();
+    private ContactsModel contactsModel = new ContactsModel();
     // The TabPane and Tabs
-    TabPane tabPane;
-    Tab entryTab;
-    Tab listTab;
-    Tab searchTab;
+    private TabPane tabPane;
+    private Tab entryTab;
+    private Tab listTab;
+    private Tab searchTab;
+    // The entry fields
+    private TextField nameField;
+    private TextField numberField;
+    private TextField addressField;
 
     public static void main(String[] args) {
         launch(args);
@@ -72,9 +76,9 @@ public class AddressBook extends Application {
         Label numberLabel = new Label("Number:");
         Label addressLabel = new Label("Address:");
         Label countryLabel = new Label("Country:");
-        TextField nameField = new TextField();
-        TextField numberField = new TextField();
-        TextField addressField = new TextField();
+        nameField = new TextField();
+        numberField = new TextField();
+        addressField = new TextField();
         ComboBox<Countries> countryBox = new ComboBox();
         countryBox.getItems().addAll(Countries.values());
         countryBox.setValue(Countries.UK);
@@ -179,16 +183,20 @@ public class AddressBook extends Application {
                 editButton
         );
 
-        // Adding the event for the button
+        // Adding the event for...
+        // EDIT
         editButton.setOnAction(event -> {
             Contact selected = (Contact) table.getSelectionModel().getSelectedItem();
-            // Check they've actually selected anything
             if (selected == null) {
                 showAlert("No Item Selected",
                         "Please select the item you wish to edit");
                 return;
             }
             System.out.println(selected.getName());
+            this.nameField.setText(selected.getName());
+            this.numberField.setText(selected.getNumber());
+            this.addressField.setText(selected.getAddress());
+            tabPane.getSelectionModel().select(entryTab);
         });
 
         vBox.getChildren().addAll(tilePane, table);
