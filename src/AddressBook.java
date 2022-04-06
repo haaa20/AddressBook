@@ -142,10 +142,16 @@ public class AddressBook extends Application {
     private Tab setupListTab() {
         Tab list = new Tab("List");
         VBox vBox = new VBox();
+        TableView table = contactsModel.table();
         Button editButton = new Button("Edit");
-        editButton.setAlignment(Pos.CENTER);
 
-        vBox.getChildren().addAll(contactsModel.table(), editButton);
+        // Adding the event for the button
+        editButton.setOnAction(event -> {
+            Contact selected = (Contact) table.getSelectionModel().getSelectedItem();
+            System.out.println(selected.getName());
+        });
+
+        vBox.getChildren().addAll(table, editButton);
         list.setContent(vBox);
         return list;
     }
