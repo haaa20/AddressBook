@@ -145,18 +145,9 @@ public class AddressBook extends Application {
 
     private Tab setupListTab() {
         Tab list = new Tab("List");
-        VBox vBox = new VBox();
         TableView table = contactsModel.table();
-        Button editButton = new Button("Edit");
 
-        // Adding the event for the button
-        editButton.setOnAction(event -> {
-            Contact selected = (Contact) table.getSelectionModel().getSelectedItem();
-            System.out.println(selected.getName());
-        });
-
-        vBox.getChildren().addAll(table, editButton);
-        list.setContent(vBox);
+        list.setContent(table);
         return list;
     }
 
@@ -165,6 +156,7 @@ public class AddressBook extends Application {
         Tab search = new Tab("Search");
         TilePane tilePane = new TilePane(10, 4);
         VBox vBox = new VBox();
+        TableView table = contactsModel.table();
 
         // Nodes to go in the TilePane
         Label nameLabel = new Label("Name:");
@@ -173,6 +165,7 @@ public class AddressBook extends Application {
         TextField numberField = new TextField();
         Button clearButton = new Button("Clear");
         Button searchButton = new Button("Search");
+        Button editButton = new Button("Edit");
 
         // Adding nodes to the TilePane
         tilePane.setPrefColumns(2);
@@ -182,10 +175,23 @@ public class AddressBook extends Application {
                 numberLabel,
                 numberField,
                 clearButton,
-                searchButton
+                searchButton,
+                editButton
         );
 
-        vBox.getChildren().addAll(tilePane, contactsModel.table());
+        // Adding the event for the button
+        editButton.setOnAction(event -> {
+            Contact selected = (Contact) table.getSelectionModel().getSelectedItem();
+            // Check they've actually selected anything
+            if (selected == null) {
+                showAlert("No Item Selected",
+                        "Please select the item you wish to edit");
+                return;
+            }
+            System.out.println(selected.getName());
+        });
+
+        vBox.getChildren().addAll(tilePane, table);
         search.setContent(vBox);
         return search;
     }
