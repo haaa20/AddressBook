@@ -21,14 +21,18 @@ public class AddressBook extends Application {
 
     // The contact model
     ContactsModel contactsModel = new ContactsModel();
+    // The TabPane and Tabs
+    TabPane tabPane;
+    Tab entryTab;
+    Tab listTab;
+    Tab searchTab;
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    private MenuBar setupMenu(BorderPane parent) {
+    private MenuBar setupMenu() {
         MenuBar menuBar = new MenuBar();
-        TabPane parentTabPane = (TabPane) parent.getCenter();
 
         // FILE
         Menu file = new Menu("File");
@@ -40,15 +44,15 @@ public class AddressBook extends Application {
         Menu view = new Menu("View");
         MenuItem entry = new MenuItem("Entry");
         entry.setOnAction(e -> {
-            Control.switchToTab(parentTabPane, 0);
+            tabPane.getSelectionModel().select(entryTab);
         });
         MenuItem list = new MenuItem("List");
         list.setOnAction(e -> {
-            Control.switchToTab(parentTabPane, 1);
+            tabPane.getSelectionModel().select(listTab);
         });
         MenuItem search = new MenuItem("Search");
         search.setOnAction(e -> {
-            Control.switchToTab(parentTabPane, 2);
+            tabPane.getSelectionModel().select(searchTab);
         });
         view.getItems().addAll(entry, list, search);
 
@@ -191,17 +195,16 @@ public class AddressBook extends Application {
         //FlowPane root = new FlowPane(); // The root node of our scene
         BorderPane root = new BorderPane(); // The border pane, to which everything will be added
         Scene scene = new Scene(root); // The scene
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
 
-        // Adding the tabs
-        tabPane.getTabs().addAll(
-                setupEntryTab(),
-                setupListTab(),
-                setupSearchTab()
-        );
+        // Instancing and adding the tabs
+        entryTab = setupEntryTab();
+        listTab = setupListTab();
+        searchTab = setupSearchTab();
+        tabPane.getTabs().addAll(entryTab, listTab, searchTab);
 
         root.setCenter(tabPane);
-        root.setTop(setupMenu(root));
+        root.setTop(setupMenu());
 
         //root.getChildren().add(root);
 
