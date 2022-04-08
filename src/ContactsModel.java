@@ -53,7 +53,7 @@ public class ContactsModel {
             contactMenu.getItems().add(editSelectedContact);
             table.setContextMenu(contactMenu);
             editSelectedContact.setOnAction(event -> {
-                System.out.println("beep");
+                editor.editContact((Contact) table.getSelectionModel().getSelectedItem());
             });
 
         }
@@ -68,8 +68,10 @@ public class ContactsModel {
     }
 
     private ObservableList<Contact> data;
+    private ContactEditor editor;
 
-    public ContactsModel() {
+    public ContactsModel(ContactEditor editor) {
+        this.editor = editor;
         // EXAMPLE DATA
         data = FXCollections.observableArrayList(
                 new Contact("Rob", "123", "Manchester", AddressBook.Countries.UK),

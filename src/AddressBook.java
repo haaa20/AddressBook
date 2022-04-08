@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class AddressBook extends Application {
+public class AddressBook extends Application implements ContactEditor{
     enum Countries {
         UK,
         US,
@@ -20,7 +20,7 @@ public class AddressBook extends Application {
     }
 
     // The contact model
-    private ContactsModel contactsModel = new ContactsModel();
+    private ContactsModel contactsModel = new ContactsModel(this);
     // The TabPane and Tabs
     private TabPane tabPane;
     private Tab entryTab;
@@ -179,25 +179,8 @@ public class AddressBook extends Application {
                 numberLabel,
                 numberField,
                 clearButton,
-                searchButton,
-                editButton
+                searchButton
         );
-
-        // Adding the event for...
-        // EDIT
-        editButton.setOnAction(event -> {
-            Contact selected = (Contact) table.getSelectionModel().getSelectedItem();
-            if (selected == null) {
-                showAlert("No Item Selected",
-                        "Please select the item you wish to edit");
-                return;
-            }
-            System.out.println(selected.getName());
-            this.nameField.setText(selected.getName());
-            this.numberField.setText(selected.getNumber());
-            this.addressField.setText(selected.getAddress());
-            tabPane.getSelectionModel().select(entryTab);
-        });
 
         vBox.getChildren().addAll(tilePane, table);
         search.setContent(vBox);
@@ -225,6 +208,19 @@ public class AddressBook extends Application {
         primaryStage.setTitle("Address Book");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public void editContact(Contact contact) {
+        if (contact == null) {
+            showAlert("No Item contact",
+                    "Please select the item you wish to edit");
+            return;
+        }
+        System.out.println(contact.getName());
+        this.nameField.setText(contact.getName());
+        this.numberField.setText(contact.getNumber());
+        this.addressField.setText(contact.getAddress());
+        tabPane.getSelectionModel().select(entryTab);
     }
 
     private void showAlert(String title, String text) {
