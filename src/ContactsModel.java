@@ -6,16 +6,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javax.swing.event.ChangeListener;
 
 public class ContactsModel {
     // Private internal class, encapsulating the table
     private class ContactTable {
         private TableView table;
-        private TableListener changeListener;
+        private ContactListener changeListener;
 
         public ContactTable(ObservableList<Contact> items) {
             table = new TableView();
-            changeListener = new TableListener();
+            changeListener = new ContactListener();
 
             // Adding table columns
             TableColumn nameColumn = new TableColumn("Name");
@@ -53,6 +54,7 @@ public class ContactsModel {
             contactMenu.getItems().add(editSelectedContact);
             table.setContextMenu(contactMenu);
             editSelectedContact.setOnAction(event -> {
+                // Sends the contact to the editor
                 editor.editContact((Contact) table.getSelectionModel().getSelectedItem());
             });
 
@@ -86,7 +88,9 @@ public class ContactsModel {
      */
     public TableView table() {
         // We need to instance a new one every time, otherwise we could only have ONE table
-        return new ContactTable(data).getTable();
+        ContactTable contactTable = new ContactTable(data);
+
+        return contactTable.getTable();
     }
 
 
@@ -99,6 +103,19 @@ public class ContactsModel {
         data.add(c);
     }
 
+    /** Removes the given contact
+     *
+     * @param c Contact
+     * @return True if remove was successful
+     */
+    public boolean remove(Contact c) {
+        if (exists(c)) {
+            data.remove(c);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Checks if the given contact exists in the data
      *
@@ -107,6 +124,21 @@ public class ContactsModel {
      */
     public boolean exists(Contact c) {
         return data.contains(c);
+    }
+
+    /**
+     * Replaces an old Contact with a new
+     *
+     * @param cOld Contact
+     * @param cNew Contact
+     * @return True if successful
+     */
+    public boolean replace(Contact cOld, Contact cNew) {
+        boolean ableTo = remove(cOld);
+        if (ableTo) {
+            add(cNew);
+        }
+        return ableTo;
     }
 
     /**

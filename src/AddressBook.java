@@ -30,6 +30,8 @@ public class AddressBook extends Application implements ContactEditor{
     private TextField nameField;
     private TextField numberField;
     private TextField addressField;
+    // The selected contact I DON'T LIKE THIS AAAAAAAA
+    private Contact selectedContact;
 
     public void run(String[] args) {
         launch(args);
@@ -100,6 +102,33 @@ public class AddressBook extends Application implements ContactEditor{
             Control.clearText(tilePane);
         });
         Button entryEdit = new Button("Edit");
+        entryEdit.setOnAction(event -> {
+            // There's a little bit of redundancy between here and the add button, but we
+            // can address that later...
+            if (selectedContact == null) {
+                showAlert("You are not currently editing any contact",
+                        "Please select a contact from the List or Search tab, right click, " +
+                                "and select 'Edit Selected Contact'");
+                return;
+            }
+            // Check for empty required fields
+            if (Control.emptyTextInput(tilePane)) {
+                showAlert("Empty Inputs",
+                        "Please fill in all required entries");
+                return;
+            }
+            // Create our new contact
+            Contact newContact = new Contact(
+                    nameField.getText(),
+                    numberField.getText(),
+                    addressField.getText(),
+                    countryBox.getValue()
+            );
+            // Override the selected contact
+            contactsModel.replace(newContact, selectedContact);
+            selectedContact = newContact;
+
+        });
         Button entryAdd = new Button("Add");
         entryAdd.setOnAction(e -> {
             // Check for empty required fields
@@ -196,8 +225,11 @@ public class AddressBook extends Application implements ContactEditor{
 
         // Instancing and adding the tabs
         entryTab = setupEntryTab();
+        entryTab.setClosable(false);
         listTab = setupListTab();
+        listTab.setClosable(false);
         searchTab = setupSearchTab();
+        searchTab.setClosable(false);
         tabPane.getTabs().addAll(entryTab, listTab, searchTab);
 
         root.setCenter(tabPane);
@@ -216,6 +248,7 @@ public class AddressBook extends Application implements ContactEditor{
                     "Please select the item you wish to edit");
             return;
         }
+        selectedContact = contact;
         System.out.println(contact.getName());
         this.nameField.setText(contact.getName());
         this.numberField.setText(contact.getNumber());
@@ -223,10 +256,11 @@ public class AddressBook extends Application implements ContactEditor{
         tabPane.getSelectionModel().select(entryTab);
     }
 
-    private void showAlert(String title, String text) {
+    private void showAlert(String header, String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(text);
+        alert.setTitle("Problem!");
+        alert.setHeaderText(header);
+        alert.setContentText(text);
         alert.showAndWait();
     }
 }
